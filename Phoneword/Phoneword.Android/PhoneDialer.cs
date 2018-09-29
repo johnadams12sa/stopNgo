@@ -11,7 +11,8 @@ namespace Phoneword.Droid
     public class PhoneDialer : IDialer
     {
         public bool Dial(string number)
-        {
+        {   
+            //System.IO.
             var context = MainActivity.Instance;
             if (context == null)
                 return false;

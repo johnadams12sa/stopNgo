@@ -13,5 +13,9 @@
         <Entry x:Name="phoneNumberText" Text="1-855-XAMARIN" />
         <Button Text="Translate" Clicked="OnTranslate" />
         <Button x:Name="callButton" Text="Call" IsEnabled="false" Clicked="OnCall" />
+
+        <Label x:Name="accelReading" Text="Hello!"/>
+
     </StackLayout>
+  
 </ContentPage>

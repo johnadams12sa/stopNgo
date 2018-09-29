@@ -1,4 +1,5 @@
 ﻿using System;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Phoneword
@@ -6,10 +7,13 @@ namespace Phoneword
     public partial class MainPage : ContentPage
     {
         string translatedNumber;
+        AccelerationReader ar;
 
         public MainPage()
         {
             InitializeComponent();
+            this.ar = new AccelerationReader();
+            ar.ToggleAccelerometer();
         }
 
         void OnTranslate(object sender, EventArgs e)
@@ -39,6 +43,13 @@ namespace Phoneword
                 if (dialer != null)
                     dialer.Dial(translatedNumber);
             }
+        }
+        void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
+        {
+            var data = e.Reading;
+            accelReading.Text = ($"Reading: X: {data.Acceleration.X}, Y: {data.Acceleration.Y}, Z: {data.Acceleration.Z}");
+            Console.WriteLine($"Reading: X: {data.Acceleration.X}, Y: {data.Acceleration.Y}, Z: {data.Acceleration.Z}");
+            // Process Acceleration X, Y, and Z
         }
     }
 }
