@@ -22,6 +22,8 @@ namespace Phoneword
             InitializeComponent();
             AccelDB db = App.Database;
             Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
+           
+            OnEmergency();
         }
 
         void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
@@ -73,7 +75,7 @@ namespace Phoneword
             var call = MessageResource.Create(
                 body: markup,
                 from: new Twilio.Types.PhoneNumber("+18473830634"),
-                to: new Twilio.Types.PhoneNumber("+12243585571")
+                to: new Twilio.Types.PhoneNumber("+19736151377")
             );
 
             Console.WriteLine(call.Sid);

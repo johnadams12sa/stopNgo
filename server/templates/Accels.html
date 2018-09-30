@@ -1,12 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Accelerations</title>
+<title>Accelerations</title>
 </head>
 <body>
+	{% block container %}
+	<div class="top-pad">
 	<h1>Terrible Driver</h1>
 	{% for a in accelerations %}
-		<h2>{{a.accelTime}}    {{a['accelY']}}</h2>
+		<div class="well">
+			<ul>
+				<div> Date: {{a.accelTime}}</div>
+				<span> Acceleration: <div name="accel">{{a['accelY']}}</div> </span>
+			</ul>
+		</div>
 	{% endfor %}
+	</div>
+	{% endblock %}
 </body>
+<script type="text/javascript">
+	console.log("here");
+	var y = document.getElementsByName('accel');
+	console.log(y.length);
+	for (var i = y.length - 1; i >= 0; i--) {
+		if (parseFloat(y[i].innerHTML) > 0.250) {
+			console.log("accel")
+			y[i].setAttribute("class", "text-danger")
+		}
+	}
+</script>
+
+<link rel='stylesheet' type='text/css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'>
+</script>
+
 </html>
