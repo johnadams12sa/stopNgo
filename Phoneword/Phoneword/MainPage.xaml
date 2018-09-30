@@ -8,10 +8,8 @@
             <On Platform="Android, UWP" Value="20" />
         </OnPlatform>
     </ContentPage.Padding>
-    <StackLayout>
-        <Label Text="Enter a Phoneword:" />
-        <Entry x:Name="phoneNumberText" Text="1-855-XAMARIN" />
-        <Button Text="Translate" Clicked="OnTranslate" />
-        <Button x:Name="callButton" Text="Call" IsEnabled="false" Clicked="OnCall" />
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <Label Text="stopandgo" FontSize="50" FontFamily="Verdana" FontAttributes="Bold"/>
+        <Button Text="Start Tracking" Clicked="OnTracking" FontFamily="Verdana"/>
     </StackLayout>
-</ContentPage>
+</ContentPage> 
