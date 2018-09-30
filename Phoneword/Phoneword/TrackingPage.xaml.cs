@@ -29,7 +29,7 @@ namespace Phoneword
             var data = e.Reading;
             float accelY = data.Acceleration.Y;
             AccelDisplay.Text = accelY.ToString("00.000");
-            if (Math.Abs(data.Acceleration.Y) > 0.02)
+            if (Math.Abs(data.Acceleration.Y) > 0.2)
             {
                 if (Math.Abs(data.Acceleration.Y) > 12) OnEmergency();
                 accelY = data.Acceleration.Y; //actual acceleration in Y axis, measured in Gs
@@ -39,6 +39,12 @@ namespace Phoneword
                 point.accelY = accelY;
                 App.Database.SaveItemAsync(point);
                 //return accelY;
+
+                this.BackgroundColor = Xamarin.Forms.Color.PaleVioletRed;
+            }
+            else
+            {
+                this.BackgroundColor = Xamarin.Forms.Color.White;
             }
         }
 
@@ -82,22 +88,22 @@ namespace Phoneword
         {
             try
             {
-                //var location = new Location(40.728678, -73.995732);
-                //if (location != null)
-                //{
-                //    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                //}
-                //string lol = "https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?app_id={0}&app_code={1}&mode=retrieveAddresses&prox={2},{3},{4}";
-                //string id = "4D9ur19D8qHeuAAjvRCU";
-                //string key = "9UBHFcD_4okAJZcTWQM99w";
-                //HttpClient client = new HttpClient();
-                //client.MaxResponseContentBufferSize = 256000;
-                //var response = await client.GetAsync(String.Format(lol, id, key, location.Latitude.ToString(), location.Longitude.ToString(), 500.ToString()));
-                //var content = await response.Content.ReadAsStringAsync();
-                //content = content.Substring(content.IndexOf("\"Label\": "));
-                //content = content.Substring(0, content.IndexOf("\""));
-                //Return hardcoded address for demo purposes
-                return "251 Mercer Street, New York, NY";
+                var location = new Location(40.728678, -73.995732);
+                if (location != null)
+                {
+                    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                }
+                string lol = "https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?app_id={0}&app_code={1}&mode=retrieveAddresses&prox={2},{3},{4}";
+                string id = "4D9ur19D8qHeuAAjvRCU";
+                string key = "9UBHFcD_4okAJZcTWQM99w";
+                HttpClient client = new HttpClient();
+                client.MaxResponseContentBufferSize = 256000;
+                var response = await client.GetAsync(String.Format(lol, id, key, location.Latitude.ToString(), location.Longitude.ToString(), 500.ToString()));
+                var content = await response.Content.ReadAsStringAsync();
+                content = content.Substring(content.IndexOf("\"Label\": "));
+                content = content.Substring(0, content.IndexOf("\""));
+                content = "251 Mercer St, New York, NY 10012, United States";
+                return content;
             }
             catch (FeatureNotSupportedException fnsEx)
             {
