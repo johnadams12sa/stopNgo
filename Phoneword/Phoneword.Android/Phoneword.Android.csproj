@@ -57,6 +57,8 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccelDB.cs" />
+    <Compile Include="AddAccelerationData.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="PhoneDialer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

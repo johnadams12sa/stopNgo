@@ -7,7 +7,8 @@ namespace Phoneword
 {
     class AccelerationReader
     { 
-        SensorSpeed speed = SensorSpeed.UI;
+        public SensorSpeed speed = SensorSpeed.UI;
+        public float accelY;
         public AccelerationReader()
         {
             Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
@@ -20,6 +21,15 @@ namespace Phoneword
             {
                 Console.WriteLine($"IN REGULAR PROJ: Reading: X: {data.Acceleration.X}, Y: " +
                 $"{data.Acceleration.Y}, Z: {data.Acceleration.Z}");
+                accelY = data.Acceleration.Y;
+
+                accelY = data.Acceleration.Y; //actual acceleration in Y axis, measured in Gs
+                //TrackingPage.AccelDisplay.Text = f.ToString("00.000");
+                AccelerationDataPoint point = new AccelerationDataPoint();
+                point.time = new DateTime();
+                point.accelY = accelY;
+                App.Database.SaveItemAsync(point);
+                Console.WriteLine($"Wrote {accelY} to database");
             }
         }
 
