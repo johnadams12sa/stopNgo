@@ -25,7 +25,14 @@ namespace Phoneword
         {
             var data = e.Reading;
             float accelY = data.Acceleration.Y;
-            AccelDisplay.Text = accelY.ToString("00.000");
+            AccelDisplay.Text = accelY.ToString("00.00");
+            if (Math.Abs(accelY) > 0.100)
+            {
+                AccelerationDataPoint point = new AccelerationDataPoint();
+                point.time = new DateTime();
+                point.accelY = accelY;
+                db.SaveItemAsync(point);
+            }
         }
 
         protected override void OnAppearing()
@@ -38,6 +45,7 @@ namespace Phoneword
         {
             base.OnDisappearing();
             Accelerometer.Stop();
+
         }
 
     }
