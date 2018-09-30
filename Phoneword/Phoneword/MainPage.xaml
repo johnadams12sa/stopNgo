@@ -13,3 +13,4 @@
         <Button Text="Start Tracking" Clicked="OnTracking" FontFamily="Verdana"/>
     </StackLayout>
 </ContentPage> 
+

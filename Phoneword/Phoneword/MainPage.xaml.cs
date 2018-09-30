@@ -1,14 +1,15 @@
 ﻿using System;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Phoneword
 {
     public partial class MainPage : ContentPage
     {
-
+    
         public MainPage()
         {
-            InitializeComponent();
+            InitializeComponent();;
         }
 
         void OnTracking(object sender, EventArgs e)
