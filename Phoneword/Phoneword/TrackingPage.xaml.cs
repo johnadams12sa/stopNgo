@@ -13,11 +13,14 @@ namespace Phoneword
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TrackingPage : ContentPage
 	{
-        AccelDB db = App.Database;
+        private AccelerationReader ar;
 
 		public TrackingPage ()
-		{   
-			InitializeComponent();
+		{
+			InitializeComponent ();
+            ar = new AccelerationReader();
+            ar.ToggleAccelerometer();
+            AccelDB db = App.Database;
             Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
         }
 
