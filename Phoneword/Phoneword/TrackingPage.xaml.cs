@@ -10,7 +10,7 @@ using Xamarin.Essentials;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.Net.Http;
-
+using Newtonsoft.Json;
 
 namespace Phoneword
 {
@@ -51,10 +51,11 @@ namespace Phoneword
             Accelerometer.Start(SensorSpeed.UI);
         }
 
-        protected override void OnDisappearing()
+        protected async override void OnDisappearing()
         {
             base.OnDisappearing();
             Accelerometer.Stop();
+            await ProcessData();
         }
 
         private async void OnEmergency()
@@ -75,7 +76,7 @@ namespace Phoneword
             var call = MessageResource.Create(
                 body: markup,
                 from: new Twilio.Types.PhoneNumber("+18473830634"),
-                to: new Twilio.Types.PhoneNumber("+19736151377")
+                to: new Twilio.Types.PhoneNumber("+12243585571")
             );
 
             Console.WriteLine(call.Sid);
@@ -123,6 +124,7 @@ namespace Phoneword
         private async Task<AccelEvent[]> ProcessData()
         {
             var entries = await App.Database.GetAllItemsAsync();
+            //entries = List<AccelerationDataPoint>(entries);
             var firstEntry = entries[0];
             var temp = new List<AccelEvent>();
             var previousEntry = entries[0];
@@ -141,26 +143,37 @@ namespace Phoneword
                 {"accelData", entries}
             };
             */
-            string readable;
-            foreach (AccelerationDataPoint element in entries)
-            {
-                var value = JsonConvert.SerializeObject(element);
-                readable = string.Concat(value);
-            }
-                var content = new FormUrlEncodedContent(readable);
-                var response = await client.PostAsync("http://3d55d47a.ngrok.io/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Attempting to write to db");
+            Dictionary<string, AccelerationDataPoint[]> allents = new Dictionary<string, AccelerationDataPoint[]>();
+            allents.Add("accelData", entries);
+           
+            var json = JsonConvert.SerializeObject(allents);
+            string url = "http://3d55d47a.ngrok.io/";
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(url);
+            await client.PostAsync("/", content);
 
 
+            //readable = string.Concat(value);
+           
+            //var content = new FormUrlEncodedContent(readable);
+            //var response = await client.PostAsync("http://3d55d47a.ngrok.io/", content);
+            //var responseString = await response.Content.ReadAsStringAsync();
 
             return temp.ToArray();
         }
-        /*accepts array, string to jsonObject?
-        protected async Task postToClientAsync()
-        {
 
+        private T[] List<T>(T[] entries)
+        {
+            throw new NotImplementedException();
         }
-        */
+        /*accepts array, string to jsonObject?
+protected async Task postToClientAsync()
+{
+
+}
+*/
 
     }
 

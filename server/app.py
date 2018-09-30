@@ -29,10 +29,12 @@ class Acceleration(db.Model):
 def addAcceleration():
 	if request.method == 'POST':
 		data = request.get_json()
+		print(data)
+
 		accelData = data['accelData']
 		temp = None
 		for a in accelData:
-			temp = Acceleration(accelTime = datetime.fromtimestamp(a['time']), accelY = a['accelY'])
+			temp = Acceleration(accelTime = datetime.datetime.now(), accelY = a['accelY'])
 			db.session.add(temp)
 			db.session.commit()
 		return str(temp)
