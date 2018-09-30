@@ -17,6 +17,16 @@ namespace Phoneword
             Navigation.PushAsync(new TrackingPage());
         }
 
+        void History(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new HistoryPage());
+        }
+
+        void Statistics(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new Statistics());
+        }
+
         //void OnTranslate(object sender, EventArgs e)
         //{
         //    translatedNumber = PhonewordTranslator.ToNumber(phoneNumberText.Text);
