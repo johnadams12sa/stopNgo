@@ -21,6 +21,11 @@ namespace Phoneword
             return db.Table<AccelerationDataPoint>().Where(i => i.ID == id).FirstOrDefaultAsync();
         }
 
+        public Task<AccelerationDataPoint[]> GetAllItemsAsync()
+        {
+            return db.Table<AccelerationDataPoint>().ToArrayAsync();
+        }
+
         // accel is y axis acceleration
         public Task<int> SaveItemAsync(AccelerationDataPoint accelY)
         {
