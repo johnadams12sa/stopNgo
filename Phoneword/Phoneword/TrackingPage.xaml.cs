@@ -11,6 +11,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.Net.Http;
 
+
 namespace Phoneword
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -54,7 +55,6 @@ namespace Phoneword
         {
             base.OnDisappearing();
             Accelerometer.Stop();
-
         }
 
         private async void OnEmergency()
@@ -126,18 +126,41 @@ namespace Phoneword
             var firstEntry = entries[0];
             var temp = new List<AccelEvent>();
             var previousEntry = entries[0];
-            for(int i=1; i<entries.Length; i++)
+            for (int i = 1; i < entries.Length; i++)
             {
                 var currentEntry = entries[i];
                 if ((currentEntry.time - previousEntry.time).Milliseconds > 5000)
                 {
-                    temp.Add(new AccelEvent((firstEntry.time-previousEntry.time).Seconds, Math.Abs((firstEntry.accelY+previousEntry.accelY)/2)));
+                    temp.Add(new AccelEvent((firstEntry.time - previousEntry.time).Seconds, Math.Abs((firstEntry.accelY + previousEntry.accelY) / 2)));
                     firstEntry = currentEntry;
                     previousEntry = currentEntry;
                 }
             }
+            /*var value = new Dictionary<string,>
+            {
+                {"accelData", entries}
+            };
+            */
+            string readable;
+            foreach (AccelerationDataPoint element in entries)
+            {
+                var value = JsonConvert.SerializeObject(element);
+                readable = string.Concat(value);
+            }
+                var content = new FormUrlEncodedContent(readable);
+                var response = await client.PostAsync("http://3d55d47a.ngrok.io/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+
+
+
             return temp.ToArray();
         }
+        /*accepts array, string to jsonObject?
+        protected async Task postToClientAsync()
+        {
+
+        }
+        */
 
     }
 
