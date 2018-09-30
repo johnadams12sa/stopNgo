@@ -6,24 +6,38 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Essentials;
 
 namespace Phoneword
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TrackingPage : ContentPage
 	{
-        AccelerationReader ar = new AccelerationReader();
         AccelDB db = App.Database;
+
 		public TrackingPage ()
 		{   
-			InitializeComponent ();
-            ar.ToggleAccelerometer();
-            AccelDisplay.Text = ar.accelY.ToString("00.000");
-		}
+			InitializeComponent();
+            Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
+        }
+
+        void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
+        {
+            var data = e.Reading;
+            float accelY = data.Acceleration.Y;
+            AccelDisplay.Text = accelY.ToString("00.000");
+        }
+
         protected override void OnAppearing()
         {
-            float f = ar.accelY;
-            AccelDisplay.Text = f.ToString("00.0000");
+            base.OnAppearing();
+            Accelerometer.Start(SensorSpeed.UI);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Accelerometer.Stop();
         }
 
     }

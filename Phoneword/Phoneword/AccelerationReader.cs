@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Xamarin.Essentials;
 
 namespace Phoneword
 {
-    class AccelerationReader
+    class AccelerationReader : INotifyPropertyChanged
     { 
         public SensorSpeed speed = SensorSpeed.UI;
         public float accelY;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public AccelerationReader()
         {
             Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
         }
 
-        void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
+        private void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
         {
             var data = e.Reading;
             if (data.Acceleration.X > 0.01 || data.Acceleration.Y > 0.02 || data.Acceleration.Z > 0.02)
@@ -30,7 +34,10 @@ namespace Phoneword
                 point.accelY = accelY;
                 App.Database.SaveItemAsync(point);
                 Console.WriteLine($"Wrote {accelY} to database");
+                //return accelY;
             }
+
+            //return 0.0;
         }
 
         public void ToggleAccelerometer()
@@ -46,5 +53,6 @@ namespace Phoneword
 
 
         }
+
     }
 }

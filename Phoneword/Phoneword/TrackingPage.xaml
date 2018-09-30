@@ -4,7 +4,7 @@
              x:Class="Phoneword.TrackingPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label x:Name="AccelDisplay"
+            <Label x:Name="AccelDisplay" FontSize="100"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
             
