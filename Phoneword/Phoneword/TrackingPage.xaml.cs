@@ -11,6 +11,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.Net.Http;
 
+
 namespace Phoneword
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -29,7 +30,7 @@ namespace Phoneword
             var data = e.Reading;
             float accelY = data.Acceleration.Y;
             AccelDisplay.Text = accelY.ToString("00.000");
-            if (Math.Abs(data.Acceleration.Y) > 0.2)
+            if (Math.Abs(data.Acceleration.Y) > 0.02)
             {
                 if (Math.Abs(data.Acceleration.Y) > 12) OnEmergency();
                 accelY = data.Acceleration.Y; //actual acceleration in Y axis, measured in Gs
@@ -39,12 +40,6 @@ namespace Phoneword
                 point.accelY = accelY;
                 App.Database.SaveItemAsync(point);
                 //return accelY;
-
-                this.BackgroundColor = Xamarin.Forms.Color.PaleVioletRed;
-            }
-            else
-            {
-                this.BackgroundColor = Xamarin.Forms.Color.White;
             }
         }
 
@@ -58,6 +53,7 @@ namespace Phoneword
         {
             base.OnDisappearing();
             Accelerometer.Stop();
+           // postToClientAsync();
         }
 
         private async void OnEmergency()
@@ -88,22 +84,22 @@ namespace Phoneword
         {
             try
             {
-                var location = new Location(40.728678, -73.995732);
-                if (location != null)
-                {
-                    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                }
-                string lol = "https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?app_id={0}&app_code={1}&mode=retrieveAddresses&prox={2},{3},{4}";
-                string id = "4D9ur19D8qHeuAAjvRCU";
-                string key = "9UBHFcD_4okAJZcTWQM99w";
-                HttpClient client = new HttpClient();
-                client.MaxResponseContentBufferSize = 256000;
-                var response = await client.GetAsync(String.Format(lol, id, key, location.Latitude.ToString(), location.Longitude.ToString(), 500.ToString()));
-                var content = await response.Content.ReadAsStringAsync();
-                content = content.Substring(content.IndexOf("\"Label\": "));
-                content = content.Substring(0, content.IndexOf("\""));
-                content = "251 Mercer St, New York, NY 10012, United States";
-                return content;
+                //var location = new Location(40.728678, -73.995732);
+                //if (location != null)
+                //{
+                //    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                //}
+                //string lol = "https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?app_id={0}&app_code={1}&mode=retrieveAddresses&prox={2},{3},{4}";
+                //string id = "4D9ur19D8qHeuAAjvRCU";
+                //string key = "9UBHFcD_4okAJZcTWQM99w";
+                //HttpClient client = new HttpClient();
+                //client.MaxResponseContentBufferSize = 256000;
+                //var response = await client.GetAsync(String.Format(lol, id, key, location.Latitude.ToString(), location.Longitude.ToString(), 500.ToString()));
+                //var content = await response.Content.ReadAsStringAsync();
+                //content = content.Substring(content.IndexOf("\"Label\": "));
+                //content = content.Substring(0, content.IndexOf("\""));
+                //Return hardcoded address for demo purposes
+                return "251 Mercer Street, New York, NY";
             }
             catch (FeatureNotSupportedException fnsEx)
             {
@@ -129,18 +125,41 @@ namespace Phoneword
             var firstEntry = entries[0];
             var temp = new List<AccelEvent>();
             var previousEntry = entries[0];
-            for(int i=1; i<entries.Length; i++)
+            for (int i = 1; i < entries.Length; i++)
             {
                 var currentEntry = entries[i];
                 if ((currentEntry.time - previousEntry.time).Milliseconds > 5000)
                 {
-                    temp.Add(new AccelEvent((firstEntry.time-previousEntry.time).Seconds, Math.Abs((firstEntry.accelY+previousEntry.accelY)/2)));
+                    temp.Add(new AccelEvent((firstEntry.time - previousEntry.time).Seconds, Math.Abs((firstEntry.accelY + previousEntry.accelY) / 2)));
                     firstEntry = currentEntry;
                     previousEntry = currentEntry;
                 }
             }
+            /*var value = new Dictionary<string,>
+            {
+                {"accelData", entries}
+            };
+            */
+            string readable;
+            foreach (AccelerationDataPoint element in entries)
+            {
+                var value = JsonConvert.SerializeObject(element);
+                readable = string.Concat(value);
+            }
+                var content = new FormUrlEncodedContent(readable);
+                var response = await client.PostAsync("http://3d55d47a.ngrok.io/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+
+
+
             return temp.ToArray();
         }
+        /*accepts array, string to jsonObject?
+        protected async Task postToClientAsync()
+        {
+
+        }
+        */
 
     }
 
