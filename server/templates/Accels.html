@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Accelerations</title>
+</head>
+<body>
+	<h1>Terrible Driver</h1>
+	{% for a in accelerations %}
+		<h2>{{a.accelTime}}    {{a['accelY']}}</h2>
+	{% endfor %}
+</body>
+</html>
