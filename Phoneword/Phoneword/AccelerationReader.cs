@@ -16,10 +16,10 @@ namespace Phoneword
         void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
         {
             var data = e.Reading;
-            if (data.Acceleration.X > 0.01 || data.Acceleration.Y > 0.02 || data.Acceleration.Z > 0.02)
+            if (Math.Abs(data.Acceleration.Y) > 0.02)
             {
-                Console.WriteLine($"IN REGULAR PROJ: Reading: X: {data.Acceleration.X}, Y: " +
-                $"{data.Acceleration.Y}, Z: {data.Acceleration.Z}");
+                //TODO: map to database
+                
             }
         }
 
@@ -31,9 +31,11 @@ namespace Phoneword
                     Accelerometer.Stop();
                 else
                     Accelerometer.Start(speed); 
-            } catch (FeatureNotSupportedException fns) { }
-              catch (Exception ex) { }
-
+            } catch (FeatureNotSupportedException fns) {
+                //lmao
+            } catch (Exception ex) {
+                //lmao 2 the electric bungaloo
+            }
 
         }
     }
