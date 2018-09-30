@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Essentials;
 
 namespace Phoneword
 {
@@ -19,9 +20,28 @@ namespace Phoneword
 			InitializeComponent ();
             ar = new AccelerationReader();
             ar.ToggleAccelerometer();
-		}
+            AccelDB db = App.Database;
+            Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
+        }
 
+        void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
+        {
+            var data = e.Reading;
+            float accelY = data.Acceleration.Y;
+            AccelDisplay.Text = accelY.ToString("00.000");
+        }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Accelerometer.Start(SensorSpeed.UI);
+        }
 
-	}
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Accelerometer.Stop();
+        }
+
+    }
 }

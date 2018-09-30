@@ -4,9 +4,10 @@
              x:Class="Phoneword.TrackingPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Label x:Name="AccelDisplay" FontSize="100"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

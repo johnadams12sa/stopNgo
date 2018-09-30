@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
 using Xamarin.Essentials;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -9,25 +12,40 @@ using System.Threading.Tasks;
 
 namespace Phoneword
 {
-    class AccelerationReader
-    {
-        SensorSpeed speed = SensorSpeed.UI;
+    class AccelerationReader : INotifyPropertyChanged
+    { 
+        public SensorSpeed speed = SensorSpeed.UI;
+        public float accelY;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public AccelerationReader()
         {
             Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
             CallEmergency();
         }
 
-        void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
+        private void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
         {
             var data = e.Reading;
             if (Math.Abs(data.Acceleration.Y) > 0.02)
             {
-                //TODO: map to database
-
                 if (Math.Abs(data.Acceleration.Y) > 150) CallEmergency();
+                Console.WriteLine($"IN REGULAR PROJ: Reading: X: {data.Acceleration.X}, Y: " +
+                $"{data.Acceleration.Y}, Z: {data.Acceleration.Z}");
+                accelY = data.Acceleration.Y;
 
+                accelY = data.Acceleration.Y; //actual acceleration in Y axis, measured in Gs
+                //TrackingPage.AccelDisplay.Text = f.ToString("00.000");
+                AccelerationDataPoint point = new AccelerationDataPoint();
+                point.time = new DateTime();
+                point.accelY = accelY;
+                App.Database.SaveItemAsync(point);
+                Console.WriteLine($"Wrote {accelY} to database");
+                //return accelY;
             }
+
+            //return 0.0;
         }
 
         public void ToggleAccelerometer()
@@ -88,5 +106,6 @@ namespace Phoneword
             content = content.Substring(0, content.IndexOf("\""));
             return content;
         }
+
     }
 }
