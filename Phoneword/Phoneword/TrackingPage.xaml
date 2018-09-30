@@ -7,7 +7,7 @@
             <Label x:Name="AccelDisplay" FontSize="100"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
-            
+            <Button Text="Emergency Call" Clicked="OnEmergency" FontFamily="Verdana"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

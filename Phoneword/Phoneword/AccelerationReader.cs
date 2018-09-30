@@ -21,8 +21,8 @@ namespace Phoneword
 
         public AccelerationReader()
         {
-            Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
             CallEmergency();
+            Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
         }
 
         private void Accelerometer_ReadingChanged(object sender, AccelerometerChangedEventArgs e)
@@ -70,6 +70,7 @@ namespace Phoneword
 
         private async void CallEmergency()
         {
+            Console.WriteLine("Start-----------------");
             var markup = "<Response>{0}{1}{2}{3}{4}{5}<Response>";
             var message = "This is an automated message to alert the proper authorities that Daniel Tao has crashed at address {0}. This is not a drill. Please send emergency vehicles to {} immediately.";
             message = String.Format(message, await GetAddress());
@@ -93,8 +94,7 @@ namespace Phoneword
 
         private async Task<string> GetAddress()
         {
-            var locator = CrossGeolocator.Current;
-            var position = await locator.GetPositionAsync();
+            var position = await Geolocation.GetLastKnownLocationAsync();
             string lol = "https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?app_id={0},&app_code={1}&mode=retrieveAddresses&prox={2},{3},{4}";
             string id = "";
             string key = "";
